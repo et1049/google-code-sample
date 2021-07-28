@@ -1,6 +1,7 @@
 """A video player class."""
 
 from .video_library import VideoLibrary
+import random
 global video_playing
 video_playing = ""
 
@@ -29,7 +30,8 @@ class VideoPlayer:
             print('Cannot play video: Video does not exist')
         else:
             if video_playing != '':
-                print('Stopping video:', video_playing)
+                print("Stopping video:", video_playing)
+                video_playing = ''
             video = self._video_library.get_video(video_id)
             print("Playing video:", video.title)
             video_playing = video.title
@@ -38,15 +40,33 @@ class VideoPlayer:
         """Stops the current video."""
         global video_playing
         if video_playing == '':
-            print('Cannot stop video: No video is currently playing')
+            print("Cannot stop video: No video is currently playing")
         else:
-            print('Stopping video:', video_playing)
+            print("Stopping video:", video_playing)
             video_playing = ''
 
     def play_random_video(self):
         """Plays a random video from the video library."""
+        videos = list(self._video_library.get_all_videos())
+        choices = []
+        for video in videos:
+            choices.append(video.video_id)
+        video_id = random.choice(choices)
+        global video_playing
+        if self._video_library.get_video(video_id) == None:
+            print('Cannot play video: Video does not exist')
+        else:
+            if video_playing != '':
+                print('Stopping video:', video_playing)
+                video_playing = ''
+            video = self._video_library.get_video(video_id)
+            print("Playing video:", video.title)
+            video_playing = video.title
 
-        print("play_random_video needs implementation")
+
+
+
+
 
     def pause_video(self):
         """Pauses the current video."""
