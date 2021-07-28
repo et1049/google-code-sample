@@ -1,11 +1,11 @@
 """A video player class."""
 
 from .video_library import VideoLibrary
-
+global video_playing
+video_playing = ""
 
 class VideoPlayer:
     """A class used to represent a Video Player."""
-
     def __init__(self):
         self._video_library = VideoLibrary()
 
@@ -24,7 +24,15 @@ class VideoPlayer:
         Args:
             video_id: The video_id to be played.
         """
-        print("play_video needs implementation")
+        global video_playing
+        if self._video_library.get_video(video_id) == None:
+            print('Cannot play video: Video does not exist')
+        else:
+            if video_playing != '':
+                print('Stopping video:', video_playing)
+            video = self._video_library.get_video(video_id)
+            print("Playing video:", video.title)
+            video_playing = video.title
 
     def stop_video(self):
         """Stops the current video."""
