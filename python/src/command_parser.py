@@ -129,6 +129,10 @@ class CommandParser:
 
         elif command[0].upper() == "HELP":
             self._get_help()
+
+        elif command[0].upper() == "CLS":
+            self._player.cls()
+
         else:
             print(
                 "Please enter a valid command, type HELP for a list of "
