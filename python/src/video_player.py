@@ -98,9 +98,6 @@ class VideoPlayer:
 
 
 
-
-
-
     def pause_video(self):
         """Pauses the current video."""
         global video_playing
@@ -119,8 +116,17 @@ class VideoPlayer:
 
     def continue_video(self):
         """Resumes playing the current video."""
-
-        print("continue_video needs implementation")
+        global video_playing
+        global video_paused
+        if video_playing == '' and video_paused == '':
+            print('Cannot continue video: No video is currently playing')
+        elif video_paused == '' and video_playing != '':
+            print('Cannot continue video: Video is not paused')
+        else:
+            video = self._video_library.get_video(video_paused)
+            print('Continuing video:', video.title)
+            video_playing = video_paused
+            video_paused = ''
 
     def show_playing(self):
         """Displays video currently playing."""
