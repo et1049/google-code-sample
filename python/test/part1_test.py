@@ -4,6 +4,7 @@ from src.video_player import VideoPlayer
 
 def test_number_of_videos(capfd):
     player = VideoPlayer()
+    player.clear()
     player.number_of_videos()
     out, err = capfd.readouterr()
     assert "5 videos in the library" in out
@@ -11,6 +12,7 @@ def test_number_of_videos(capfd):
 
 def test_show_all_videos(capfd):
     player = VideoPlayer()
+    player.clear()
     player.show_all_videos()
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -25,6 +27,7 @@ def test_show_all_videos(capfd):
 
 def test_play_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -34,6 +37,7 @@ def test_play_video(capfd):
 
 def test_play_video_nonexistent(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("does_not_exist")
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -43,6 +47,7 @@ def test_play_video_nonexistent(capfd):
 
 def test_play_video_stop_previous(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.play_video("funny_dogs_video_id")
     out, err = capfd.readouterr()
@@ -55,6 +60,7 @@ def test_play_video_stop_previous(capfd):
 
 def test_play_video_dont_stop_previous_if_nonexistent(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.play_video("some_other_video")
     out, err = capfd.readouterr()
@@ -67,6 +73,7 @@ def test_play_video_dont_stop_previous_if_nonexistent(capfd):
 
 def test_stop_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.stop_video()
     out, err = capfd.readouterr()
@@ -78,6 +85,7 @@ def test_stop_video(capfd):
 
 def test_stop_video_twice(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.stop_video()
     player.stop_video()
@@ -91,6 +99,7 @@ def test_stop_video_twice(capfd):
 
 def test_stop_video_none_playing(capfd):
     player = VideoPlayer()
+    player.clear()
     player.stop_video()
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -100,6 +109,7 @@ def test_stop_video_none_playing(capfd):
 
 def test_play_random_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_random_video()
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -111,6 +121,7 @@ def test_play_random_video(capfd):
 
 def test_play_random_stops_previous_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.play_random_video()
     out, err = capfd.readouterr()
@@ -125,6 +136,7 @@ def test_play_random_stops_previous_video(capfd):
 
 def test_show_playing(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.show_playing()
     out, err = capfd.readouterr()
@@ -136,6 +148,7 @@ def test_show_playing(capfd):
 
 def test_show_nothing_playing(capfd):
     player = VideoPlayer()
+    player.clear()
     player.show_playing()
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -145,6 +158,7 @@ def test_show_nothing_playing(capfd):
 
 def test_pause_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.pause_video()
     out, err = capfd.readouterr()
@@ -156,6 +170,7 @@ def test_pause_video(capfd):
 
 def test_pause_video_show_playing(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.pause_video()
     player.show_playing()
@@ -168,6 +183,7 @@ def test_pause_video_show_playing(capfd):
 
 def test_pause_video_play_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.pause_video()
     player.play_video("amazing_cats_video_id")
@@ -186,6 +202,7 @@ def test_pause_video_play_video(capfd):
 
 def test_pause_already_paused_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.pause_video()
     player.pause_video()
@@ -199,6 +216,7 @@ def test_pause_already_paused_video(capfd):
 
 def test_pause_video_none_playing(capfd):
     player = VideoPlayer()
+    player.clear()
     player.pause_video()
     out, err = capfd.readouterr()
     lines = out.splitlines()
@@ -208,6 +226,7 @@ def test_pause_video_none_playing(capfd):
 
 def test_continue_video(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.pause_video()
     player.continue_video()
@@ -221,6 +240,7 @@ def test_continue_video(capfd):
 
 def test_continue_video_not_paused(capfd):
     player = VideoPlayer()
+    player.clear()
     player.play_video("amazing_cats_video_id")
     player.continue_video()
     out, err = capfd.readouterr()
@@ -231,6 +251,7 @@ def test_continue_video_not_paused(capfd):
 
 def test_continue_none_playing(capfd):
     player = VideoPlayer()
+    player.clear()
     player.continue_video()
     out, err = capfd.readouterr()
     lines = out.splitlines()
