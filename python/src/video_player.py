@@ -37,11 +37,16 @@ class VideoPlayer:
             video_id: The video_id to be played.
         """
         global video_playing
+        global video_paused
         if self._video_library.get_video(video_id) == None:
             print('Cannot play video: Video does not exist')
         else:
             if video_playing != '':
                 print("Stopping video:", self._video_library.get_video(video_playing).title)
+                video_playing = ''
+                video_paused = ''
+            if video_paused != '':
+                print("Stopping video:", self._video_library.get_video(video_paused).title)
                 video_playing = ''
                 video_paused = ''
             video = self._video_library.get_video(video_id)
@@ -109,7 +114,25 @@ class VideoPlayer:
     def show_playing(self):
         """Displays video currently playing."""
 
-        print("show_playing needs implementation")
+        global video_playing
+        if video_paused != '':
+            video = self._video_library.get_video(video_paused)
+            tags = []
+            for tag in video.tags:
+                tags.append(str(tag))
+            print('Currently playing: ' + str(video.title), '(' + str(video.video_id) + str(') [') +str(' '.join(tags))  + str(']'), '- PAUSED')
+
+        elif video_playing == '':
+            print('No video is currently playing')
+
+        else:
+            video = self._video_library.get_video(video_playing)
+            tags = []
+            for tag in video.tags:
+                tags.append(str(tag))
+            print('Currently playing: ' + str(video.title), '(' + str(video.video_id) + str(') [') +str(' '.join(tags))  + str(']'))
+
+
 
     def create_playlist(self, playlist_name):
         """Creates a playlist with a given name.
