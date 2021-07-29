@@ -4,11 +4,22 @@ from .video_library import VideoLibrary
 import random
 global video_playing
 video_playing = ""
+global video_paused
+video_paused = ""
+
+
+
 
 class VideoPlayer:
     """A class used to represent a Video Player."""
     def __init__(self):
         self._video_library = VideoLibrary()
+
+    def clear(self):
+        global video_playing                    # Clears the variables between tests
+        global video_paused
+        video_playing = ''
+        video_paused = ''
 
     def number_of_videos(self):
         num_videos = len(self._video_library.get_all_videos())
@@ -30,20 +41,24 @@ class VideoPlayer:
             print('Cannot play video: Video does not exist')
         else:
             if video_playing != '':
-                print("Stopping video:", video_playing)
+                print("Stopping video:", self._video_library.get_video(video_playing).title)
                 video_playing = ''
+                video_paused = ''
             video = self._video_library.get_video(video_id)
             print("Playing video:", video.title)
-            video_playing = video.title
+            video_playing = video.video_id
+            video_paused = ''
 
     def stop_video(self):
         """Stops the current video."""
         global video_playing
+        global video_paused
         if video_playing == '':
             print("Cannot stop video: No video is currently playing")
         else:
-            print("Stopping video:", video_playing)
+            print("Stopping video:", self._video_library.get_video(video_playing).title)
             video_playing = ''
+            video_paused = ''
 
     def play_random_video(self):
         """Plays a random video from the video library."""
@@ -53,15 +68,17 @@ class VideoPlayer:
             choices.append(video.video_id)
         video_id = random.choice(choices)
         global video_playing
+        global video_paused
         if self._video_library.get_video(video_id) == None:
             print('Cannot play video: Video does not exist')
         else:
             if video_playing != '':
-                print('Stopping video:', video_playing)
+                print('Stopping video:', self._video_library.get_video(video_playing).title)
                 video_playing = ''
+                video_paused = ''
             video = self._video_library.get_video(video_id)
             print("Playing video:", video.title)
-            video_playing = video.title
+            video_playing = video.video_id
 
 
 
@@ -70,8 +87,19 @@ class VideoPlayer:
 
     def pause_video(self):
         """Pauses the current video."""
+        global video_playing
+        global video_paused
+        if video_paused != '':
+            video = self._video_library.get_video(video_paused)
+            print('Video already paused:', video.title)
+        elif video_playing == '':
+            print('Cannot pause video: No video is currently playing')
+        else:
+            video = self._video_library.get_video(video_playing)
+            video_paused = video_playing
+            print('Pausing video:', video.title)
+            video_playing = ''
 
-        print("pause_video needs implementation")
 
     def continue_video(self):
         """Resumes playing the current video."""
