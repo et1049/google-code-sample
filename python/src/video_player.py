@@ -116,6 +116,7 @@ class VideoPlayer:
 
     def continue_video(self):
         """Resumes playing the current video."""
+
         global video_playing
         global video_paused
         if video_playing == '' and video_paused == '':
