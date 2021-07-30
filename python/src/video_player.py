@@ -191,16 +191,15 @@ class VideoPlayer:
             line = line.split('|')
             lines.append(line)
         if len(data) == 0:
-            print('Cannot add video to', playlist_name, ': Playlist does not exist')
-        elif self._video_library.get_video(video_id) == None:
-            print('Cannot add video to', playlist_name, ': Video does not exist')
+            print('Cannot add video to', playlist_name + ': Playlist does not exist')
         else:
-            playlists = self._video_library.get_all_playlists()
             names = []
-            for i in range (0, len(playlists)):
+            for i in range (0, len(lines)):
                 names.append(lines[i][0])
             if playlist_name not in names:
-                print('Cannot add video to', playlist_name, ': Playlist does not exist')
+                print('Cannot add video to', playlist_name + ': Playlist does not exist')
+            elif self._video_library.get_video(video_id) == None:
+                print('Cannot add video to', playlist_name + ': Video does not exist')
             else:
                 for name in range (0, len(names)):
                     if names[name] == playlist_name:
@@ -214,7 +213,6 @@ class VideoPlayer:
                         if j == play_index:
                             lines[j][1].strip('\n')
                             line = str(lines[j][0] + "|" + lines[j][1] + ',' + video_id)
-                            print(line)
                         else:
                             line = (lines[j][0] + "|" + lines[j][1])
                         file.write(line)
@@ -224,8 +222,17 @@ class VideoPlayer:
 
     def show_all_playlists(self):
         """Display all playlists."""
-
-        print("show_all_playlists needs implementation")
+        playlists = self._video_library.get_all_playlists()
+        names = []
+        if len(playlists) == 0:
+            print('No playlists exist yet')
+        else:
+            for i in range(0, len(playlists)):
+                names.append(playlists[i].play_title)
+            print('Showing all playlists:')
+            sort(names)
+            for name in names:
+                print(name)
 
     def show_playlist(self, playlist_name):
         """Display all videos in a playlist with a given name.
