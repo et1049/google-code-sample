@@ -37,8 +37,8 @@ class Playlist:
         """Video constructor."""
         self._play_title = play_title
 
-        # Turn the songs into a tuple here so it's unmodifiable,
-        # in case the caller changes the 'playlist_songs' they passed to us
+        # Turn the items into a tuple here so it's unmodifiable,
+        # in case the caller changes the 'playlist_items' they passed to us
         self._items = tuple(playlist_items)
 
     @property
@@ -48,5 +48,5 @@ class Playlist:
 
     @property
     def items(self) -> Sequence[str]:
-        """Returns the list of songs of a playlist."""
+        """Returns the list of items in a playlist."""
         return self._items
