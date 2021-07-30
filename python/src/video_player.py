@@ -158,7 +158,24 @@ class VideoPlayer:
         Args:
             playlist_name: The playlist name.
         """
-        print("create_playlist needs implementation")
+        playlists = self._video_library.get_all_playlists()
+        names = []
+        for playlist in playlists:
+            names.append(playlist.play_title)
+        if playlist_name.upper() in (name.upper() for name in names):
+            print('Cannot create playlist: A playlist with the same name already exists')
+        else:
+            file = open("playlists.txt", "a+", newline='')
+            if len(file.readlines()) == 0:
+                line = str(playlist_name + '|')
+            else:
+                line = str("\n" + playlist_name + '|')
+            file.write(line)
+            file.close()
+            self._video_library.__init__()
+            print("Successfully created new playlist:", playlist_name)
+
+
 
     def add_to_playlist(self, playlist_name, video_id):
         """Adds a video to a playlist with a given name.
@@ -167,7 +184,43 @@ class VideoPlayer:
             playlist_name: The playlist name.
             video_id: The video_id to be added.
         """
-        print("add_to_playlist needs implementation")
+        file = open("playlists.txt", "r")
+        data = file.readlines()
+        lines = []
+        for line in data:
+            line = line.split('|')
+            lines.append(line)
+        if len(data) == 0:
+            print('Cannot add video to', playlist_name, ': Playlist does not exist')
+        elif self._video_library.get_video(video_id) == None:
+            print('Cannot add video to', playlist_name, ': Video does not exist')
+        else:
+            playlists = self._video_library.get_all_playlists()
+            names = []
+            for i in range (0, len(playlists)):
+                names.append(lines[i][0])
+            if playlist_name not in names:
+                print('Cannot add video to', playlist_name, ': Playlist does not exist')
+            else:
+                for name in range (0, len(names)):
+                    if names[name] == playlist_name:
+                        play_index = name
+                if video_id in lines[play_index][1]:
+                    print('Cannot add video to', playlist_name, ': Video already added')
+                else:
+                    lines[i][0] = str(names[i])
+                    file = open("playlists.txt", "r+")
+                    for j in range(0, len(lines)):
+                        if j == play_index:
+                            lines[j][1].strip('\n')
+                            line = str(lines[j][0] + "|" + lines[j][1] + ',' + video_id)
+                            print(line)
+                        else:
+                            line = (lines[j][0] + "|" + lines[j][1])
+                        file.write(line)
+                    print('Added video to', names[play_index], ':', video_id)
+        file.close()
+
 
     def show_all_playlists(self):
         """Display all playlists."""
