@@ -60,7 +60,7 @@ class VideoLibrary:
         return list(self._playlists.values())
 
     def get_playlist(self, playlist_title):
-        """Returns the playlist object (title, songs) from the video library.
+        """Returns the playlist object (title, items) from the video library.
 
         Args:
             playlist_title: The playlist title.
