@@ -196,13 +196,13 @@ class VideoPlayer:
             names = []
             for i in range (0, len(lines)):
                 names.append(lines[i][0])
-            if playlist_name not in names:
+            if playlist_name.upper() not in (name.upper() for name in names):
                 print('Cannot add video to', playlist_name + ': Playlist does not exist')
             elif self._video_library.get_video(video_id) == None:
                 print('Cannot add video to', playlist_name + ': Video does not exist')
             else:
                 for name in range (0, len(names)):
-                    if names[name] == playlist_name:
+                    if names[name].upper() == playlist_name.upper():
                         play_index = name
                 if video_id in lines[play_index][1]:
                     print('Cannot add video to', playlist_name, ': Video already added')
@@ -219,7 +219,8 @@ class VideoPlayer:
                         else:
                             line = (lines[j][0] + "|" + lines[j][1])
                         file.write(line)
-                    print('Added video to', names[play_index], ':', video_id)
+                    video = self._video_library.get_video(video_id)
+                    print('Added video to', playlist_name, ':', video.title)
         file.close()
 
 
@@ -243,21 +244,37 @@ class VideoPlayer:
         Args:
             playlist_name: The playlist name.
         """
-        playlist = self._video_library.get_playlist(playlist_name)
-        if playlist == None:
+        file = open("playlists.txt", "r")
+        data = file.readlines()
+        lines = []
+        for line in data:
+            line = line.split('|')
+            lines.append(line)
+        names= []
+
+        for i in range (0, len(lines)):
+            names.append(lines[i][0])
+            if playlist_name.upper() == lines[i][0].upper():
+                play_index = i
+        if playlist_name.upper() not in (name.upper() for name in names):
             print('Cannot show playlist', playlist_name + ': Playlist does not exist')
         else:
-            if len(playlist.items) == 0:
+            print('Showing playlist:', names[play_index])
+            if len(lines[play_index][1]) == 0:
                 print('No videos here yet')
             else:
-                print('Showing playlist:', playlist.play_title)
-                for item in playlist.items:
-                    video = self._video_library.get_video(item)
-                    tags = []
-                    for tag in video.tags:
-                        tags.append(str(tag))
-                    print((str(video.title) + ' (' + str(video.video_id) + str(') [') +str(' '.join(tags))  + str(']')))
-
+                items = lines[play_index][1].split(',')
+                for item in items:
+                    if items is None:
+                        print('No videos here yet')
+                    else:
+                        video = self._video_library.get_video(item)
+                        tags = []
+                        if tags is not None:
+                            for tag in video.tags:
+                                tags.append(str(tag))
+                        print((str(video.title) + ' (' + str(video.video_id) + str(') [') +str(' '.join(tags))  + str(']')))
+        file.close()
 
     def remove_from_playlist(self, playlist_name, video_id):
         """Removes a video to a playlist with a given name.
@@ -266,7 +283,48 @@ class VideoPlayer:
             playlist_name: The playlist name.
             video_id: The video_id to be removed.
         """
-        print("remove_from_playlist needs implementation")
+        file = open("playlists.txt", "r")
+        data = file.readlines()
+        lines = []
+        for line in data:
+            line = line.split('|')
+            lines.append(line)
+        names= []
+        for i in range (0, len(lines)):
+            names.append(lines[i][0])
+        playlist = self._video_library.get_playlist(playlist_name)
+        '''elif len(playlist.items) == 0:
+            print('Cannot remove video from:', playlist_name + ': Video is not in playlist')'''
+        if playlist_name.upper() not in (name.upper() for name in names):
+            print('Cannot show playlist', playlist_name + ': Playlist does not exist')
+        elif self._video_library.get_video(video_id) == None:
+            print('Cannot remove video from:', playlist_name + ': Video does not exist')
+
+        else:
+            for name in range (0, len(names)):
+                if names[name].upper() == playlist_name.upper():
+                    play_index = name
+            if video_id not in lines[play_index][1]:
+                print('Cannot remove video from', playlist_name, ': Video is not in playlist')
+            else:
+                lines[i][0] = str(names[i])
+                file = open("playlists.txt", "w")
+                for j in range(0, len(lines)):
+                    if j == play_index:
+                        lines[j][1].strip('\n')
+                        items = lines[j][1].split(',')
+                        videos = []
+                        for k in range(0, len(items)):
+                            if items[k] != video_id:
+                                videos.append(items[k])
+                        line = str(lines[j][0] + "|" + str(','.join(videos)))
+                    else:
+                        line = (lines[j][0] + "|" + lines[j][1])
+                    file.write(line)
+                video = self._video_library.get_video(video_id)
+                print('Removed video from', playlist_name, ':', video.title)
+        file.close()
+
 
     def clear_playlist(self, playlist_name):
         """Removes all videos from a playlist with a given name.
