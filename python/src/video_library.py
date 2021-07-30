@@ -1,6 +1,7 @@
 """A video library class."""
 
 from .video import Video
+from .video import Playlist
 from pathlib import Path
 import csv
 
@@ -27,6 +28,16 @@ class VideoLibrary:
                     url,
                     [tag.strip() for tag in tags.split(",")] if tags else [],
                 )
+        self._playlists = {}
+        with open(Path(__file__).parent / "playlists.txt") as playlist_file:
+            reader = _csv_reader_with_strip(
+                csv.reader(playlist_file, delimiter="|"))
+            for playlist_info in reader:
+                title, items = playlist_info
+                self._playlists[title] = Playlist(
+                    title,
+                    [item.strip() for item in items.split(",")] if items else [],
+                )
 
     def get_all_videos(self):
         """Returns all available video information from the video library."""
@@ -43,3 +54,19 @@ class VideoLibrary:
             does not exist.
         """
         return self._videos.get(video_id, None)
+
+    def get_all_playlists(self):
+        """Returns all available playlist information from the video library."""
+        return list(self._playlists.values())
+
+    def get_playlist(self, playlist_title):
+        """Returns the playlist object (title, songs) from the video library.
+
+        Args:
+            playlist_title: The playlist title.
+
+        Returns:
+            The Playlist object for the requested playlist_title. None if the video
+            does not exist.
+        """
+        return self._playlists.get(playlist_title, None)
