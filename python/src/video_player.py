@@ -211,8 +211,11 @@ class VideoPlayer:
                     file = open("playlists.txt", "r+")
                     for j in range(0, len(lines)):
                         if j == play_index:
-                            lines[j][1].strip('\n')
-                            line = str(lines[j][0] + "|" + lines[j][1] + ',' + video_id)
+                            if len(lines[j][1]) == 0:
+                                line = str(lines[j][0] + "|" + video_id)
+                            else:
+                                lines[j][1].strip('\n')
+                                line = str(lines[j][0] + "|" + lines[j][1] + ',' + video_id)
                         else:
                             line = (lines[j][0] + "|" + lines[j][1])
                         file.write(line)
@@ -230,7 +233,7 @@ class VideoPlayer:
             for i in range(0, len(playlists)):
                 names.append(playlists[i].play_title)
             print('Showing all playlists:')
-            sort(names)
+            names.sort()
             for name in names:
                 print(name)
 
@@ -240,7 +243,21 @@ class VideoPlayer:
         Args:
             playlist_name: The playlist name.
         """
-        print("show_playlist needs implementation")
+        playlist = self._video_library.get_playlist(playlist_name)
+        if playlist == None:
+            print('Cannot show playlist', playlist_name + ': Playlist does not exist')
+        else:
+            if len(playlist.items) == 0:
+                print('No videos here yet')
+            else:
+                print('Showing playlist:', playlist.play_title)
+                for item in playlist.items:
+                    video = self._video_library.get_video(item)
+                    tags = []
+                    for tag in video.tags:
+                        tags.append(str(tag))
+                    print((str(video.title) + ' (' + str(video.video_id) + str(') [') +str(' '.join(tags))  + str(']')))
+
 
     def remove_from_playlist(self, playlist_name, video_id):
         """Removes a video to a playlist with a given name.
