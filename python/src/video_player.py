@@ -371,7 +371,33 @@ class VideoPlayer:
         Args:
             playlist_name: The playlist name.
         """
-        print("deletes_playlist needs implementation")
+        file = open("playlists.txt", "r")
+        file.seek(0)
+        data = file.readlines()
+        lines = []
+        for line in data:
+            line = line.split('|')
+            lines.append(line)
+        names= []
+        for i in range (0, len(lines)):
+            names.append(lines[i][0])
+        playlist = self._video_library.get_playlist(playlist_name)
+        if playlist_name.upper() not in (name.upper() for name in names):
+            print('Cannot delete playlist', playlist_name + ': Playlist does not exist')
+        else:
+            for name in range (0, len(names)):
+                if names[name].upper() == playlist_name.upper():
+                    play_index = name
+            else:
+                lines[i][0] = str(names[i])
+                file = open("playlists.txt", "w")
+                for j in range(0, len(lines)):
+                    if j != play_index:
+                        line = (lines[j][0] + "|" + lines[j][1])
+                    file.write(line)
+
+                print('Successfully deleted playlist', playlist_name)
+        file.close()
 
     def search_videos(self, search_term):
         """Display all the videos whose titles contain the search_term.
