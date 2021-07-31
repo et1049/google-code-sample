@@ -102,6 +102,7 @@ def test_search_videos_with_tag_no_answer(capfd):
 @mock.patch('builtins.input', lambda *args: '1')
 def test_search_videos_with_tag_play_answered_number(capfd):
     player = VideoPlayer()
+    player.clear()
     player.search_videos_tag("#cat")
     out, err = capfd.readouterr()
     lines = out.splitlines()
