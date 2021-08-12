@@ -434,6 +434,7 @@ class VideoPlayer:
                 pass
 
 
+
     def search_videos_tag(self, video_tag):
         """Display all videos whose tags contains the provided tag.
 
